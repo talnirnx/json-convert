@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Conversion</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section-title {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .section-content, .bullet-points {
+            margin-top: 10px;
+        }
+        .bullet-points {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+        }
+        button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <textarea id="inputField"></textarea>
+    <button onclick="convertToJsonAndDisplay()">Convert and Display</button>
+
+    <div id="content"></div>
+
+    <script>
+        function convertToJsonAndDisplay() {
+            const inputField = document.getElementById('inputField');
+            const contentDiv = document.getElementById('content');
+
+            try {
+                const data = JSON.parse(inputField.value);
+                contentDiv.innerHTML = ''; // Clear previous content
+
+                for (const section in data) {
+                    const sectionDiv = document.createElement('div');
+                    sectionDiv.className = 'section';
+
+                    const title = document.createElement('h2');
+                    title.className = 'section-title';
+                    title.textContent = section;
+                    sectionDiv.appendChild(title);
+
+                    if (data[section].value) {
+                        const valuePara = document.createElement('p');
+                        valuePara.className = 'section-content';
+                        valuePara.textContent = data[section].value;
+                        sectionDiv.appendChild(valuePara);
+                    }
+
+                    if (data[section].bullet_points) {
+                        const bulletList = document.createElement('ul');
+                        bulletList.className = 'bullet-points';
+
+                        data[section].bullet_points.forEach(point => {
+                            const listItem = document.createElement('li');
+                            listItem.textContent = point;
+                            bulletList.appendChild(listItem);
+                        });
+
+                        sectionDiv.appendChild(bulletList);
+                    }
+
+                    contentDiv.appendChild(sectionDiv);
+                }
+            } catch (e) {
+                contentDiv.innerHTML = `<p style="color: red;">Error parsing JSON: ${e.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
